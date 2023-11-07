@@ -61,7 +61,7 @@ void sequential_quicksort(T *A, size_t n) {
   sequential_quicksort(A + pivot_index + 1, n - pivot_index - 1);
 }
 
-// 2.7
+// 2.68952
 template <typename T>
 T scan3(T *A, size_t n) {
   size_t k = sqrt(n);
@@ -152,13 +152,7 @@ T scan2(T *A, size_t n) {
 }
 
 template <class T>
-size_t parallel_partition(T *A, size_t n) {
-  T* B = (T*)malloc(n * sizeof(T));
-  // size_t* left_flag = (size_t*)malloc(n * sizeof(size_t));
-  // size_t* right_flag = (size_t*)malloc(n * sizeof(size_t));
-  size_t* left_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
-  size_t* right_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
-
+size_t parallel_partition(T *A, size_t n, T* B, size_t* left_prefix_sum, size_t* right_prefix_sum) {
   size_t random_index = hash164(n) % n;
   T pivot = A[random_index];
   size_t pivot_index;
@@ -190,18 +184,11 @@ size_t parallel_partition(T *A, size_t n) {
     }
   });
   A[pivot_index] = pivot;
-
-  free(B);
-  // free(left_flag);
-  // free(right_flag);
-  free(left_prefix_sum);
-  free(right_prefix_sum);
-
   return pivot_index;
 }
 
 template <class T>
-void quicksort(T *A, size_t n) {
+void quicksort_rec(T *A, size_t n, T *B, size_t* left_prefix_sum, size_t* right_prefix_sum) {
   // std::sort(A, A + n);
   if(n <= 1) {
     return;
@@ -211,13 +198,26 @@ void quicksort(T *A, size_t n) {
     std::sort(A, A + n);
     return;
   }
-  size_t pivot_index = parallel_partition(A, n);
+  size_t pivot_index = parallel_partition(A, n, B, left_prefix_sum, right_prefix_sum);
   // std::cout << "Pivot Index: " << pivot_index << std::endl;
   // std::cout << "After Partitioning:" << std::endl;
   // for(size_t j = 0; j < n; j++ ) {
   //   std::cout << A[j] << std::endl;
   // }
-  auto f1 = [&]() { quicksort(A, pivot_index); };
-  auto f2 = [&]() { quicksort(A + pivot_index + 1, n - pivot_index - 1); };
+  auto f1 = [&]() { quicksort_rec(A, pivot_index, B, left_prefix_sum, right_prefix_sum); };
+  auto f2 = [&]() { quicksort_rec(A + pivot_index + 1, n - pivot_index - 1, B + pivot_index + 1, left_prefix_sum + pivot_index + 1, right_prefix_sum + pivot_index + 1); };
   par_do(f1, f2);
+}
+
+template <class T>
+void quicksort(T *A, size_t n) {
+  T* B = (T*)malloc(n * sizeof(T));
+  size_t* left_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
+  size_t* right_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
+
+  quicksort_rec(A, n, B, left_prefix_sum, right_prefix_sum);
+
+  free(B);
+  free(left_prefix_sum);
+  free(right_prefix_sum);
 }
