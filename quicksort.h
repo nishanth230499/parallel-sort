@@ -105,7 +105,6 @@ T scan1(T *A, size_t n) {
 }
 
 template <typename T>
-template <typename T>
 T scan_up(T* A, T* LS, size_t n) {
   if(n <= 10) {
     T sum = 0;
