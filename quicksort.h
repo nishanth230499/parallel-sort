@@ -62,7 +62,7 @@ void sequential_quicksort(T *A, size_t n) {
 }
 
 template <typename T>
-T scan(T *A, size_t n) {
+T scan1(T *A, size_t n) {
   size_t k = sqrt(n);
   size_t chunk_size = (size_t) n/k + 1;
   T *chunk_sum = (T *)malloc(k * sizeof(T));
@@ -102,6 +102,42 @@ T scan(T *A, size_t n) {
   });
 
   return total;
+}
+
+template <typename T>
+T scan_up(T* A, T* LS, size_t n) {
+  if(n == 1) {
+    return A[0];
+  }
+  size_t m = n/2;
+  T l,r;
+  auto f1 = [&]() { l = scan_up(A, LS, m); };
+  auto f2 = [&]() { r = scan_up(A + m, LS + m, n - m); };
+  par_do(f1, f2);
+
+  LS[m-1] = l;
+  return l+r;
+}
+
+template <typename T>
+void scan_down(T* A, T* LS, size_t n, T offset) {
+  if(n == 1) {
+    A[0] = offset;
+    return;
+  }
+  size_t m = n/2;
+  auto f1 = [&]() { scan_down(A, LS, m, offset); };
+  auto f2 = [&]() { scan_down(A + m, LS + m, n - m, offset + LS[m-1]); };
+  par_do(f1, f2);
+}
+
+template <typename T>
+T scan(T *A, size_t n) {
+  T *LS = (T *)malloc((n-1) * sizeof(T));
+  T offset = 0;
+  T sum = scan_up(A, LS, n);
+  scan_down(A, LS, n, offset);
+  return sum;
 }
 
 template <class T>
