@@ -5,6 +5,18 @@
 
 using namespace parlay;
 
+inline uint64_t hash164(uint64_t u) {
+  uint64_t v = u * 3935559000370003845ul + 2691343689449507681ul;
+  v ^= v >> 21;
+  v ^= v << 37;
+  v ^= v >> 4;
+  v *= 4768777513237032717ul;
+  v ^= v << 20;
+  v ^= v >> 41;
+  v ^= v << 5;
+  return v;
+}
+
 template <class T>
 void sequential_quicksort(T *A, size_t n) {
   if(n <= 1) {
@@ -100,7 +112,7 @@ size_t parallel_partition(T *A, size_t n) {
   size_t* left_prefix_sum = (size_t*)malloc(n * sizeof(size_t));
   size_t* right_prefix_sum = (size_t*)malloc(n * sizeof(size_t));
 
-  size_t random_index = rand() % n;
+  size_t random_index = hash164(n) % n;
   T pivot = A[random_index];
   size_t pivot_index;
 
@@ -144,7 +156,7 @@ void quicksort(T *A, size_t n) {
   if(n <= 1) {
     return;
   }
-  if(n < 10000) {
+  if(n < 1000) {
     // sequential_quicksort(A, n);
     std::sort(A, A + n);
     return;
