@@ -159,7 +159,7 @@ void quicksort(T *A, size_t n) {
   if(n <= 1) {
     return;
   }
-  if(n < 50000) {
+  if(n < 100000) {
     // sequential_quicksort(A, n);
     std::sort(A, A + n);
     return;
