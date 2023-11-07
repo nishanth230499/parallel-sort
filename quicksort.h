@@ -127,11 +127,11 @@ T scan_up(T* A, T* LS, size_t n) {
 template <typename T>
 void scan_down(T* A, T* LS, size_t n, T offset) {
   if(n <= 3e6) {
-    T total = offset;
+    T total = offset, temp;
     for (size_t i = 0; i < n; i++) {
-      T tmp = A[i];
+      temp = A[i];
       A[i] = total;
-      total += tmp;
+      total += temp;
     }
     return;
   }
@@ -188,8 +188,8 @@ size_t parallel_partition(T *A, size_t n, T* B, size_t* LSl, size_t* LSr, size_t
   left_prefix_sum[n] = 0;
   right_prefix_sum[n] = 0;
 
-  auto f1 = [&]() { pivot_index = scan2(left_prefix_sum, n + 1, LSl); };
-  auto f2 = [&]() { scan2(right_prefix_sum, n + 1, LSr);};
+  auto f1 = [&]() { pivot_index = scan3(left_prefix_sum, n + 1); };
+  auto f2 = [&]() { scan3(right_prefix_sum, n + 1);};
   par_do(f1, f2);  
 
   // std::cout << "Random Index: " << random_index << std::endl;
