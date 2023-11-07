@@ -143,7 +143,7 @@ void quicksort(T *A, size_t n) {
   if(n <= 1) {
     return;
   }
-  if(n < 50) {
+  if(n < 5000) {
     sequential_quicksort(A, n);
     return;
   }
