@@ -63,7 +63,7 @@ void sequential_quicksort(T *A, size_t n) {
 
 // 2.7
 template <typename T>
-T scan1(T *A, size_t n) {
+T scan3(T *A, size_t n) {
   size_t k = sqrt(n);
   size_t chunk_size = (size_t) n/k + 1;
   T *chunk_sum = (T *)malloc(k * sizeof(T));
@@ -141,8 +141,9 @@ void scan_down(T* A, T* LS, size_t n, T offset) {
   par_do(f1, f2);
 }
 
+// 2.734
 template <typename T>
-T scan(T *A, size_t n) {
+T scan2(T *A, size_t n) {
   T *LS = (T *)malloc((n-1) * sizeof(T));
   T offset = 0;
   T sum = scan_up(A, LS, n);
@@ -171,8 +172,8 @@ size_t parallel_partition(T *A, size_t n) {
   left_prefix_sum[n] = 0;
   right_prefix_sum[n] = 0;
 
-  auto f1 = [&]() { pivot_index = scan(left_prefix_sum, n + 1); };
-  auto f2 = [&]() { scan(right_prefix_sum, n + 1);};
+  auto f1 = [&]() { pivot_index = scan3(left_prefix_sum, n + 1); };
+  auto f2 = [&]() { scan3(right_prefix_sum, n + 1);};
   par_do(f1, f2);  
 
   // std::cout << "Random Index: " << random_index << std::endl;
