@@ -109,8 +109,10 @@ size_t parallel_partition(T *A, size_t n) {
     right_flag[i] = right_prefix_sum[i] = A[i] > pivot ? 1 : 0;
     B[i] = A[i];
   });
-  pivot_index = scan(left_prefix_sum, n);
-  scan(right_prefix_sum, n);
+
+  auto f1 = [&]() { pivot_index = scan(left_prefix_sum, n); };
+  auto f2 = [&]() { scan(right_prefix_sum, n);};
+  par_do(f1, f2);  
 
   // std::cout << "Random Index: " << random_index << std::endl;
   // std::cout << "Left Flag, Left Prefix, Right Flag, Right Prefix" << std::endl;
@@ -141,7 +143,7 @@ void quicksort(T *A, size_t n) {
   if(n <= 1) {
     return;
   }
-  if(n < 1000) {
+  if(n < 100) {
     sequential_quicksort(A, n);
     return;
   }
