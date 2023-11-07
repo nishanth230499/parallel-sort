@@ -112,7 +112,7 @@ size_t parallel_partition(T *A, size_t n) {
   size_t* left_prefix_sum = (size_t*)malloc(n * sizeof(size_t));
   size_t* right_prefix_sum = (size_t*)malloc(n * sizeof(size_t));
 
-  size_t random_index = hash164(n) % n;
+  size_t random_index = rand() % n;
   T pivot = A[random_index];
   size_t pivot_index;
 
