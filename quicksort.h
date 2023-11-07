@@ -106,7 +106,7 @@ T scan1(T *A, size_t n) {
 
 template <typename T>
 T scan_up(T* A, T* LS, size_t n) {
-  if(n <= 10) {
+  if(n <= 100) {
     T sum = 0;
     for(size_t i = 0; i < n; i++) {
       sum += A[i];
@@ -125,7 +125,7 @@ T scan_up(T* A, T* LS, size_t n) {
 
 template <typename T>
 void scan_down(T* A, T* LS, size_t n, T offset) {
-  if(n <= 10) {
+  if(n <= 100) {
     T total = offset;
     for (size_t i = 0; i < n; i++) {
       T tmp = A[i];
