@@ -192,7 +192,7 @@ void quicksort_rec(T *A, size_t n, T *B, size_t* LSl, size_t* LSr, size_t* left_
   if(n <= 1) {
     return;
   }
-  if(n < 200000) {
+  if(n < 400000) {
     // sequential_quicksort(A, n);
     std::sort(A, A + n);
     return;
