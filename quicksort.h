@@ -145,7 +145,8 @@ void quicksort(T *A, size_t n) {
     return;
   }
   if(n < 10000) {
-    sequential_quicksort(A, n);
+    // sequential_quicksort(A, n);
+    std::sort(A, A + n);
     return;
   }
   size_t pivot_index = parallel_partition(A, n);
