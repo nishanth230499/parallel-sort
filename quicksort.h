@@ -151,8 +151,31 @@ T scan2(T *A, size_t n, T* LS) {
 }
 
 template <class T>
+size_t find_median_index(T* A, size_t n) {
+  size_t k = 100;
+  size_t random_ind[k];
+  for(size_t i = 0; i < k; i++) {
+    random_ind[i] = hash164(i) % n;
+  }
+  // std::cout << "Before sorting: " << std::endl;
+  // for(size_t i = 0; i < k; i++) {
+  //   std::cout << A[random_ind[i]] << " ";
+  // }
+  // std::cout << std::endl;
+  std::sort(random_ind, random_ind + k, [&](size_t a, size_t b) {
+    return A[a] < A[b];
+  });
+  // std::cout << "After sorting: " << std::endl;
+  // for(size_t i = 0; i < k; i++) {
+  //   std::cout << A[random_ind[i]] << " ";
+  // }
+  // std::cout << std::endl;
+  return random_ind[k/2];
+}
+
+template <class T>
 size_t parallel_partition(T *A, size_t n, T* B, size_t* LSl, size_t* LSr, size_t* left_prefix_sum, size_t* right_prefix_sum) {
-  size_t random_index = hash164(n) % n;
+  size_t random_index = find_median_index(A, n);
   T pivot = A[random_index];
   size_t pivot_index;
 
@@ -192,7 +215,8 @@ void quicksort_rec(T *A, size_t n, T *B, size_t* LSl, size_t* LSr, size_t* left_
   if(n <= 1) {
     return;
   }
-  if(n < 500000) {
+  // if(n < 400000) {
+  if(n<1000) {
     // sequential_quicksort(A, n);
     std::sort(A, A + n);
     return;
