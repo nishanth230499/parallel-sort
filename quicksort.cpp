@@ -43,11 +43,20 @@ int main(int argc, char* argv[]) {
     parallel_for(0, n,
                  [&](size_t j) { A[j] = B[j] = hash64(j * random_seed); });
 
+    // for(size_t j = 0; j < n; j++ ) {
+    //   std::cout << A[j] << std::endl;
+    // }
     parlay::timer t;
     quicksort(A, n);
     t.stop();
 
     std::sort(B, B + n);
+
+    // std::cout << "Manual sort, Auto Sort" << std::endl;
+    // for(size_t j = 0; j < n; j++ ) {
+    //   std::cout << A[j] << " " << B[j] << std::endl;
+    // }
+
     parallel_for(0, n, [&](size_t j) {
       if (A[j] != B[j]) {
         std::cout << "The output is not sorted\n";
