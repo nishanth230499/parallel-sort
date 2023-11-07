@@ -156,7 +156,7 @@ void quicksort(T *A, size_t n) {
   if(n <= 1) {
     return;
   }
-  if(n < 1000) {
+  if(n < 10000) {
     // sequential_quicksort(A, n);
     std::sort(A, A + n);
     return;
