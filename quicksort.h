@@ -107,18 +107,18 @@ T scan(T *A, size_t n) {
 template <class T>
 size_t parallel_partition(T *A, size_t n) {
   T* B = (T*)malloc(n * sizeof(T));
-  size_t* left_flag = (size_t*)malloc(n * sizeof(size_t));
-  size_t* right_flag = (size_t*)malloc(n * sizeof(size_t));
-  size_t* left_prefix_sum = (size_t*)malloc(n * sizeof(size_t));
-  size_t* right_prefix_sum = (size_t*)malloc(n * sizeof(size_t));
+  // size_t* left_flag = (size_t*)malloc(n * sizeof(size_t));
+  // size_t* right_flag = (size_t*)malloc(n * sizeof(size_t));
+  size_t* left_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
+  size_t* right_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
 
   size_t random_index = hash164(n) % n;
   T pivot = A[random_index];
   size_t pivot_index;
 
   parallel_for(0, n, [&](size_t i) {
-    left_flag[i] = left_prefix_sum[i] = (A[i] <= pivot && i != random_index) ? 1 : 0;
-    right_flag[i] = right_prefix_sum[i] = A[i] > pivot ? 1 : 0;
+    left_prefix_sum[i] = (A[i] <= pivot && i != random_index) ? 1 : 0;
+    right_prefix_sum[i] = A[i] > pivot ? 1 : 0;
     B[i] = A[i];
   });
 
@@ -132,18 +132,18 @@ size_t parallel_partition(T *A, size_t n) {
   //   std::cout << left_flag[j] << " " << left_prefix_sum[j] << " " << right_flag[j] << " " << right_prefix_sum[j] << std::endl;
   // }
   parallel_for(0, n, [&](size_t i) {
-    if(left_flag[i]) {
+    if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
       A[left_prefix_sum[i]] = B[i];
     }
-    if(right_flag[i]) {
+    if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
       A[pivot_index + right_prefix_sum[i] + 1] = B[i];
     }
   });
   A[pivot_index] = pivot;
 
   free(B);
-  free(left_flag);
-  free(right_flag);
+  // free(left_flag);
+  // free(right_flag);
   free(left_prefix_sum);
   free(right_prefix_sum);
 
