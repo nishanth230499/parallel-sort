@@ -131,6 +131,7 @@ size_t parallel_partition(T *A, size_t n) {
 
   free(B);
   free(left_flag);
+  free(right_flag);
   free(left_prefix_sum);
   free(right_prefix_sum);
 
