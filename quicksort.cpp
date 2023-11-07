@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     
     // Generate random arrays: test2
     parallel_for(0, n,
-                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % 1e5; });
+                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)1e5; });
 
     // for(size_t j = 0; j < n; j++ ) {
     //   std::cout << A[j] << std::endl;
