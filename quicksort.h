@@ -105,9 +105,10 @@ T scan1(T *A, size_t n) {
   return total;
 }
 
+// 2000000: 2.69659
 template <typename T>
 T scan_up(T* A, T* LS, size_t n) {
-  if(n <= 2000000) {
+  if(n <= 3000000) {
     T sum = 0;
     for(size_t i = 0; i < n; i++) {
       sum += A[i];
@@ -126,7 +127,7 @@ T scan_up(T* A, T* LS, size_t n) {
 
 template <typename T>
 void scan_down(T* A, T* LS, size_t n, T offset) {
-  if(n <= 2000000) {
+  if(n <= 3000000) {
     T total = offset;
     for (size_t i = 0; i < n; i++) {
       T tmp = A[i];
