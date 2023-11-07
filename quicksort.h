@@ -210,7 +210,7 @@ size_t parallel_partition(T *A, size_t n, T* B, size_t* LSl, size_t* LSr, size_t
 }
 
 // 3e5: 1.62398
-// 35e4: 
+// 35e4: 1.63964
 // 4e5: 1.61909
 // 5e5: 1.66368
 template <class T>
@@ -219,7 +219,7 @@ void quicksort_rec(T *A, size_t n, T *B, size_t* LSl, size_t* LSr, size_t* left_
   if(n <= 1) {
     return;
   }
-  if(n < 350000) {
+  if(n < 400000) {
     // sequential_quicksort(A, n);
     std::sort(A, A + n);
     return;
