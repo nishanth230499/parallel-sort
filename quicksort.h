@@ -235,12 +235,12 @@ void quicksort_rec(
   if(n <= 1) {
     return;
   }
-  // if(n < 400000) {
+  if(n < 400000) {
   // if(n<100) {
   //   // sequential_quicksort(A, n);
-  //   std::sort(A, A + n);
-  //   return;
-  // }
+    std::sort(A, A + n);
+    return;
+  }
   size_t pivot_inds[2];
   parallel_partition(
     A,
