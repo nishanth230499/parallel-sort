@@ -44,12 +44,12 @@ int main(int argc, char* argv[]) {
     //              [&](size_t j) { A[j] = B[j] = hash64(j * random_seed); });
     
     // Generate random arrays: test2
-    // parallel_for(0, n,
-    //              [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)1e5; });
+    parallel_for(0, n,
+                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)1e5; });
     
     // Generate random arrays: test4
-    parallel_for(0, n,
-                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)10; });
+    // parallel_for(0, n,
+    //              [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)10; });
 
     // for(size_t j = 0; j < n; j++ ) {
     //   std::cout << A[j] << std::endl;
