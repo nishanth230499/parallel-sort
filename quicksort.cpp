@@ -39,9 +39,13 @@ int main(int argc, char* argv[]) {
 
   double total_time = 0;
   for (int i = 0; i <= num_rounds; i++) {
-    // Generate random arrays
+    // Generate random arrays: test1
+    // parallel_for(0, n,
+    //              [&](size_t j) { A[j] = B[j] = hash64(j * random_seed); });
+    
+    // Generate random arrays: test2
     parallel_for(0, n,
-                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed); });
+                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % 1e5; });
 
     // for(size_t j = 0; j < n; j++ ) {
     //   std::cout << A[j] << std::endl;
