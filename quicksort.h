@@ -150,9 +150,12 @@ T scan2(T *A, size_t n, T* LS) {
   return sum;
 }
 
+// 50: 
+// 100: 1.65716
+// 200: 
 template <class T>
 size_t find_median_index(T* A, size_t n) {
-  size_t k = 100;
+  size_t k = 200;
   size_t random_ind[k];
   for(size_t i = 0; i < k; i++) {
     random_ind[i] = hash164(i) % n;
