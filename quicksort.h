@@ -122,14 +122,17 @@ size_t parallel_partition(T *A, size_t n) {
     B[i] = A[i];
   });
 
-  auto f1 = [&]() { pivot_index = scan(left_prefix_sum, n); };
-  auto f2 = [&]() { scan(right_prefix_sum, n);};
+  left_prefix_sum[n] = 0;
+  right_prefix_sum[n] = 0;
+
+  auto f1 = [&]() { pivot_index = scan(left_prefix_sum, n + 1); };
+  auto f2 = [&]() { scan(right_prefix_sum, n + 1);};
   par_do(f1, f2);  
 
   // std::cout << "Random Index: " << random_index << std::endl;
-  // std::cout << "Left Flag, Left Prefix, Right Flag, Right Prefix" << std::endl;
+  // std::cout << "Left Prefix, Right Prefix" << std::endl;
   // for(size_t j = 0; j < n; j++ ) {
-  //   std::cout << left_flag[j] << " " << left_prefix_sum[j] << " " << right_flag[j] << " " << right_prefix_sum[j] << std::endl;
+  //   std::cout << left_prefix_sum[j] << " " << right_prefix_sum[j] << std::endl;
   // }
   parallel_for(0, n, [&](size_t i) {
     if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
