@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     } else {
       // Generate random arrays: test1
       parallel_for(0, n,
-                  [&](size_t j) { A[j] = B[j] = hash64(j * random_seed); });
+                  [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)1e9; });
     }
 
     // for(size_t j = 0; j < n; j++ ) {
