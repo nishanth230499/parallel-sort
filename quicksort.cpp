@@ -44,11 +44,11 @@ int main(int argc, char* argv[]) {
   double total_time = 0;
   for (int i = 0; i <= num_rounds; i++) {
     if(test == 2) {
-      Generate random arrays: test2
+      // Generate random arrays: test2
       parallel_for(0, n,
                  [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)1e5; });
     } else if(test == 4) {
-      Generate random arrays: test4
+      // Generate random arrays: test4
       parallel_for(0, n,
                    [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)10; });
     } else {
