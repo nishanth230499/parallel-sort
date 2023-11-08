@@ -159,9 +159,9 @@ size_t find_median_index(T* A, size_t n) {
   //   std::cout << A[random_ind[i]] << " ";
   // }
   // std::cout << std::endl;
-  // std::sort(random_ind, random_ind + k, [&](size_t a, size_t b) {
-  //   return A[a] < A[b];
-  // });
+  std::sort(random_ind, random_ind + k, [&](size_t a, size_t b) {
+    return A[a] < A[b];
+  });
   // std::cout << "After sorting: " << std::endl;
   // for(size_t i = 0; i < k; i++) {
   //   std::cout << A[random_ind[i]] << " ";
