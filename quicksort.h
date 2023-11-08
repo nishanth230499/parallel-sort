@@ -187,7 +187,6 @@ size_t* parallel_partition(
     left_prefix_sum[i] = (A[i] < pivot) ? 1 : 0;
     right_prefix_sum[i] = A[i] > pivot ? 1 : 0;
     B[i] = A[i];
-    A[i] = pivot;
   });
 
   left_prefix_sum[n] = 0;
@@ -209,6 +208,9 @@ size_t* parallel_partition(
       A[left_prefix_sum[i]] = B[i];
     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
+    }
+    if(i >= pivot_inds[0] && i < pivot_inds[1]) {
+      A[i] = pivot;
     }
   });
   // for(size_t i = pivot_inds[0]; i < pivot_inds[1]; i++) {
