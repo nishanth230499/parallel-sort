@@ -17,51 +17,6 @@ inline uint64_t hash164(uint64_t u) {
   return v;
 }
 
-template <class T>
-void sequential_quicksort(T *A, size_t n) {
-  if(n <= 1) {
-    return;
-  }
-  T temp;
-  size_t random_index = rand() % n;
-  T pivot = A[random_index];
-  size_t pivot_index = -1;
-  for (size_t i = 0; i < n; i++) {
-    if (A[i] <= pivot)
-      pivot_index++;
-  }
-  // Swap the pivot to pivot index
-  A[random_index] = A[pivot_index];
-  A[pivot_index] = pivot;
-
-  // Sorting left and right part of the pivot element
-  size_t i = 0, j = n-1;
-  while(i < pivot_index && j > pivot_index) {
-    while(A[i] <= pivot) {
-      i++;
-    }
-    while(A[j] > pivot) {
-      j--;
-    }
-    if(i < pivot_index && j > pivot_index) {
-      // Swap the numbers from left part to right part of the pivot table
-      temp = A[i];
-      A[i] = A[j];
-      A[j] = temp;
-      i++;
-      j--;
-    }
-  }
-  // std::cout << "indices " << 0 << " " << pivot_index << " " << n-1 << std::endl;
-  // for(size_t i = 0; i<n; i++) {
-  //   std::cout << A[i] << " ";
-  // }
-  // std::cout << std::endl;
-  sequential_quicksort(A, pivot_index);
-  sequential_quicksort(A + pivot_index + 1, n - pivot_index - 1);
-}
-
-// 2.68952
 template <typename T>
 T scan3(T *A, size_t n, size_t *chunk_sum) {
   size_t k = sqrt(n);
@@ -187,6 +142,7 @@ void parallel_partition(
     left_prefix_sum[i] = (A[i] < pivot) ? 1 : 0;
     right_prefix_sum[i] = A[i] > pivot ? 1 : 0;
     B[i] = A[i];
+    A[i] = pivot;
   });
 
   left_prefix_sum[n] = 0;
@@ -209,9 +165,9 @@ void parallel_partition(
     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
     }
-    if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-      A[i] = pivot;
-    }
+    // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
+      
+    // }
   });
   // for(size_t i = pivot_inds[0]; i < pivot_inds[1]; i++) {
   //   A[i] = pivot;
