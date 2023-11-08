@@ -171,7 +171,7 @@ size_t find_median_index(T* A, size_t n) {
 }
 
 template <class T>
-size_t* parallel_partition(
+void parallel_partition(
   T *A,
   size_t n,
   size_t *pivot_inds,
@@ -221,7 +221,7 @@ size_t* parallel_partition(
   //     A[i] = pivot;
   //   // }
   // });
-  return pivot_inds;
+  // return pivot_inds;
 }
 
 // 3e5: 1.62398
