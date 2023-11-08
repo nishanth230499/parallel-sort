@@ -204,13 +204,11 @@ size_t* parallel_partition(
   //   std::cout << left_prefix_sum[j] << " " << right_prefix_sum[j] << std::endl;
   // }
   parallel_for(0, n, [&](size_t i) {
+    A[i] = pivot;
     if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
       A[left_prefix_sum[i]] = B[i];
     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
-    }
-    if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-      A[i] = pivot;
     }
   });
   // for(size_t i = pivot_inds[0]; i < pivot_inds[1]; i++) {
