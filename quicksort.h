@@ -235,7 +235,7 @@ void quicksort_rec(
   if(n <= 1) {
     return;
   }
-  if(n < 400000) {
+  if(n < 500000) {
   // if(n<100) {
   //   // sequential_quicksort(A, n);
     std::sort(A, A + n);
