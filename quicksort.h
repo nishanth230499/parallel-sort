@@ -210,11 +210,14 @@ size_t* parallel_partition(
       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
     }
   });
-  parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
-    // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-      A[i] = pivot;
-    // }
-  });
+  for(size_t i = pivot_inds[0]; i < pivot_inds[1]; i++) {
+    A[i] = pivot;
+  }
+  // parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
+  //   // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
+  //     A[i] = pivot;
+  //   // }
+  // });
   return pivot_inds;
 }
 
