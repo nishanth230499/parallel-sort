@@ -229,8 +229,8 @@ void quicksort_rec(
     A + pivot_inds[1],
     n - pivot_inds[1],
     B + pivot_inds[1],
-    LSl + pivot_inds[1],
-    LSr + pivot_inds[1],
+    LSl + pivot_inds[1]/2,
+    LSr + pivot_inds[1]/2,
     left_prefix_sum + pivot_inds[1],
     right_prefix_sum + pivot_inds[1]); };
   par_do(f1, f2);
@@ -239,8 +239,8 @@ void quicksort_rec(
 template <class T>
 void quicksort(T *A, size_t n) {
   T* B = (T*)malloc(n * sizeof(T));
-  size_t *LSl = (size_t *)malloc((n-1) * sizeof(size_t));
-  size_t *LSr = (size_t *)malloc((n-1) * sizeof(size_t));
+  size_t *LSl = (size_t *)malloc((n/2) * sizeof(size_t));
+  size_t *LSr = (size_t *)malloc((n/2) * sizeof(size_t));
   size_t* left_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
   size_t* right_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
 
