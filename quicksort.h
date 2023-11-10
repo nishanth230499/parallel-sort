@@ -122,7 +122,7 @@ size_t find_median_index(T* A, size_t n) {
   //   std::cout << A[random_ind[i]] << " ";
   // }
   // std::cout << std::endl;
-  return random_ind[k/2];
+  return random_ind[k/2 - 1];
 }
 
 template <class T>
