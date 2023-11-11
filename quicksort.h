@@ -63,9 +63,8 @@ T scan3(T *A, size_t n, size_t *chunk_sum) {
   return total;
 }
 
-template <typename T>
-T scan_up(T* A, T* LS, size_t n) {
-  T l = 0,r;
+size_t scan_up(size_t* A, size_t* LS, size_t n) {
+  size_t l = 0,r;
   if(n <= 900000) {
     for(size_t i = 0; i < n; i++) {
       l += A[i];
@@ -81,10 +80,9 @@ T scan_up(T* A, T* LS, size_t n) {
   return l+r;
 }
 
-template <typename T>
-void scan_down(T* A, T* LS, size_t n, T offset) {
+void scan_down(size_t* A, size_t* LS, size_t n, size_t offset) {
   if(n <= 900000) {
-    T total = offset, temp;
+    size_t total = offset, temp;
     for (size_t i = 0; i < n; i++) {
       temp = A[i];
       A[i] = total;
@@ -99,9 +97,8 @@ void scan_down(T* A, T* LS, size_t n, T offset) {
 }
 
 // 2.734
-template <typename T>
-T scan2(T *A, size_t n, T* LS) {
-  T sum = scan_up(A, LS, n);
+size_t scan2(size_t *A, size_t n, size_t* LS) {
+  size_t sum = scan_up(A, LS, n);
   scan_down(A, LS, n, 0);
   return sum;
 }
