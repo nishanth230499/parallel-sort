@@ -18,7 +18,7 @@ using namespace parlay;
 // }
 
 inline uint64_t hash164(uint64_t u) {
-  uint64_t hash = 3935559000370003845ul;
+  uint64_t hash = 1315423911ul;
   hash ^= ((hash << 5) + u + (hash >> 2));
   return hash;
 }
