@@ -193,9 +193,9 @@ void quicksort_rec(
   size_t* left_prefix_sum,
   size_t* right_prefix_sum) {
   // std::sort(A, A + n);
-  if(n <= 1) {
-    return;
-  }
+  // if(n <= 1) {
+  //   return;
+  // }
   if(n < 500000) {
   // if(n<100) {
   //   // sequential_quicksort(A, n);
