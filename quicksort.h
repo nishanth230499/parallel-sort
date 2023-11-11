@@ -101,9 +101,8 @@ void scan_down(T* A, T* LS, size_t n, T offset) {
 // 2.734
 template <typename T>
 T scan2(T *A, size_t n, T* LS) {
-  T offset = 0;
   T sum = scan_up(A, LS, n);
-  scan_down(A, LS, n, offset);
+  scan_down(A, LS, n, 0);
   return sum;
 }
 
