@@ -65,15 +65,14 @@ T scan3(T *A, size_t n, size_t *chunk_sum) {
 
 template <typename T>
 T scan_up(T* A, T* LS, size_t n) {
+  T l = 0,r;
   if(n <= 900000) {
-    T sum = 0;
     for(size_t i = 0; i < n; i++) {
-      sum += A[i];
+      l += A[i];
     }
-    return sum;
+    return l;
   }
   size_t m = n/2;
-  T l,r;
   auto f1 = [&]() { l = scan_up(A, LS, m); };
   auto f2 = [&]() { r = scan_up(A + m, LS + m, n - m); };
   par_do(f1, f2);
