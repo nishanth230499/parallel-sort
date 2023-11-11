@@ -65,7 +65,7 @@ T scan3(T *A, size_t n, size_t *chunk_sum) {
 
 template <typename T>
 T scan_up(T* A, T* LS, size_t n) {
-  if(n <= 3e6) {
+  if(n <= 4e6) {
     T sum = 0;
     for(size_t i = 0; i < n; i++) {
       sum += A[i];
@@ -84,7 +84,7 @@ T scan_up(T* A, T* LS, size_t n) {
 
 template <typename T>
 void scan_down(T* A, T* LS, size_t n, T offset) {
-  if(n <= 3e6) {
+  if(n <= 4e6) {
     T total = offset, temp;
     for (size_t i = 0; i < n; i++) {
       temp = A[i];
