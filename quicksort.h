@@ -5,16 +5,22 @@
 
 using namespace parlay;
 
+// inline uint64_t hash164(uint64_t u) {
+//   uint64_t v = u * 3935559000370003845ul + 2691343689449507681ul;
+//   v ^= v >> 21;
+//   v ^= v << 37;
+//   v ^= v >> 4;
+//   v *= 4768777513237032717ul;
+//   v ^= v << 20;
+//   v ^= v >> 41;
+//   v ^= v << 5;
+//   return v;
+// }
+
 inline uint64_t hash164(uint64_t u) {
-  uint64_t v = u * 3935559000370003845ul + 2691343689449507681ul;
-  v ^= v >> 21;
-  v ^= v << 37;
-  v ^= v >> 4;
-  v *= 4768777513237032717ul;
-  v ^= v << 20;
-  v ^= v >> 41;
-  v ^= v << 5;
-  return v;
+  uint64_t hash = 3935559000370003845ul;
+  hash ^= ((hash << 5) + u + (hash >> 2));
+  return hash;
 }
 
 template <typename T>
@@ -142,7 +148,6 @@ void parallel_partition(
     left_prefix_sum[i] = (A[i] < pivot) ? 1 : 0;
     right_prefix_sum[i] = A[i] > pivot ? 1 : 0;
     B[i] = A[i];
-    A[i] = pivot;
   });
 
   left_prefix_sum[n] = 0;
@@ -165,9 +170,9 @@ void parallel_partition(
     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
     }
-    // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-    //   A[i] = pivot;
-    // }
+    if(i >= pivot_inds[0] && i < pivot_inds[1]) {
+      A[i] = pivot;
+    }
   });
   // for(size_t i = pivot_inds[0]; i < pivot_inds[1]; i++) {
   //   A[i] = pivot;
@@ -194,9 +199,6 @@ void quicksort_rec(
   size_t* left_prefix_sum,
   size_t* right_prefix_sum) {
   // std::sort(A, A + n);
-  // if(n <= 1) {
-  //   return;
-  // }
   if(n < 500000) {
   // if(n<100) {
   //   // sequential_quicksort(A, n);
