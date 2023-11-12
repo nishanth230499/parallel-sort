@@ -17,16 +17,16 @@ using namespace parlay;
 //   return v;
 // }
 
-// inline uint64_t hash164(uint64_t u) {
-//   uint64_t hash = 1315423911ul;
-//   hash ^= ((hash << 5) + u + (hash >> 2));
-//   return hash;
-// }
-
 inline uint64_t hash164(uint64_t u) {
-  uint64_t v = u * 3935559000370003845ul + 2691343689449507681ul;
-  return (v >> 1) | ((((v >> 0) ^ (v >> 2) ^ (v >> 3) ^ (v >> 5)) & 1) << 15);
+  uint64_t hash = 1315423911ul;
+  hash ^= ((hash << 5) + u + (hash >> 2));
+  return hash;
 }
+
+// inline uint64_t hash164(uint64_t u) {
+//   uint64_t v = u * 3935559000370003845ul + 2691343689449507681ul;
+//   return (v >> 1) | ((((v >> 0) ^ (v >> 2) ^ (v >> 3) ^ (v >> 5)) & 1) << 15);
+// }
 
 template <typename T>
 T scan3(T *A, size_t n, size_t *chunk_sum) {
