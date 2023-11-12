@@ -156,8 +156,8 @@ void parallel_partition(
 
   left_prefix_sum[n] = 0;
   right_prefix_sum[n] = 0;
-  auto f1 = [&]() { pivot_inds[0] = scan3(left_prefix_sum, n + 1, LSl); };
-  auto f2 = [&]() { pivot_inds[1] = scan3(right_prefix_sum, n + 1, LSr);};
+  auto f1 = [&]() { pivot_inds[0] = scan2(left_prefix_sum, n + 1, LSl); };
+  auto f2 = [&]() { pivot_inds[1] = scan2(right_prefix_sum, n + 1, LSr);};
   par_do(f1, f2);  
 
   pivot_inds[1] = n - pivot_inds[1];
