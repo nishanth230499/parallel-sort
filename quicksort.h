@@ -71,7 +71,7 @@ size_t scan3(size_t *A, size_t n, size_t *chunk_sum) {
 template <typename T>
 T scan_up(T* A, T* LS, size_t n) {
   T l = 0,r;
-  if(n <= 1000000) {
+  if(n <= 800000) {
     for(size_t i = 0; i < n; i++) {
       l += A[i];
     }
@@ -86,13 +86,13 @@ T scan_up(T* A, T* LS, size_t n) {
   return l+r;
 }
 
-// 1e6: 
+// 1e6: 1.7762
 // 9e5: 1.66
 // 8e5: 1.58884
 // 7e5: 1.83577
 template <typename T>
 void scan_down(T* A, T* LS, size_t n, T offset) {
-  if(n <= 1000000) {
+  if(n <= 800000) {
     T total = offset, temp;
     for (size_t i = 0; i < n; i++) {
       temp = A[i];
@@ -193,10 +193,7 @@ void parallel_partition(
   // return pivot_inds;
 }
 
-// 3e5: 1.62398
-// 35e4: 1.63964
-// 4e5: 1.61909
-// 5e5: 1.66368
+// 8.5e5: 1.7762
 template <class T>
 void quicksort_rec(
   T *A,
@@ -207,7 +204,7 @@ void quicksort_rec(
   size_t* left_prefix_sum,
   size_t* right_prefix_sum) {
   // std::sort(A, A + n);
-  if(n < 850000) {
+  if(n < 900000) {
   // if(n<100) {
   //   // sequential_quicksort(A, n);
     std::sort(A, A + n);
