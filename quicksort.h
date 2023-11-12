@@ -29,7 +29,7 @@ inline uint64_t hash164(uint64_t u) {
 // }
 
 template <typename T>
-T scan3(T *A, size_t n, T *chunk_sum) {
+T scan(T *A, size_t n, T *chunk_sum) {
   size_t k = sqrt(n);
   size_t chunk_size = (size_t) n/k + 1;
   T total = 0;
@@ -68,54 +68,6 @@ T scan3(T *A, size_t n, T *chunk_sum) {
   return total;
 }
 
-template <typename T>
-T scan_up(T* A, T* LS, size_t n) {
-  T l = 0,r;
-  if(n <= 800000) {
-    for(size_t i = 0; i < n; i++) {
-      l += A[i];
-    }
-    return l;
-  }
-  size_t m = n/2;
-  auto f1 = [&]() { l = scan_up(A, LS, m); };
-  auto f2 = [&]() { r = scan_up(A + m, LS + m, n - m); };
-  par_do(f1, f2);
-
-  LS[m-1] = l;
-  return l+r;
-}
-
-// 1e6: 1.7762
-// 9e5: 1.66
-// 8e5: 1.58884
-// 7e5: 1.83577
-template <typename T>
-void scan_down(T* A, T* LS, size_t n, T offset) {
-  if(n <= 800000) {
-    T total = offset, temp;
-    for (size_t i = 0; i < n; i++) {
-      temp = A[i];
-      A[i] = total;
-      total += temp;
-    }
-    return;
-  }
-  size_t m = n/2;
-  auto f1 = [&]() { scan_down(A, LS, m, offset); };
-  auto f2 = [&]() { scan_down(A + m, LS + m, n - m, offset + LS[m-1]); };
-  par_do(f1, f2);
-}
-
-// 2.734
-template <typename T>
-T scan2(T *A, size_t n, T* LS) {
-  T offset = 0;
-  T sum = scan_up(A, LS, n);
-  scan_down(A, LS, n, offset);
-  return sum;
-}
-
 template <class T>
 size_t find_median_index(T* A, size_t n) {
   size_t k = 20;
@@ -123,19 +75,11 @@ size_t find_median_index(T* A, size_t n) {
   for(size_t i = 0; i < k; i++) {
     random_ind[i] = hash164(i) % n;
   }
-  // std::cout << "Before sorting: " << std::endl;
-  // for(size_t i = 0; i < k; i++) {
-  //   std::cout << A[random_ind[i]] << " ";
-  // }
-  // std::cout << std::endl;
+
   std::sort(random_ind, random_ind + k, [&](size_t a, size_t b) {
     return A[a] < A[b];
   });
-  // std::cout << "After sorting: " << std::endl;
-  // for(size_t i = 0; i < k; i++) {
-  //   std::cout << A[random_ind[i]] << " ";
-  // }
-  // std::cout << std::endl;
+
   return random_ind[k/2 - 1];
 }
 
@@ -160,18 +104,12 @@ void parallel_partition(
 
   left_prefix_sum[n] = 0;
   right_prefix_sum[n] = 0;
-  auto f1 = [&]() { pivot_inds[0] = scan3(left_prefix_sum, n + 1, LSl); };
-  auto f2 = [&]() { pivot_inds[1] = scan3(right_prefix_sum, n + 1, LSr);};
+  auto f1 = [&]() { pivot_inds[0] = scan(left_prefix_sum, n + 1, LSl); };
+  auto f2 = [&]() { pivot_inds[1] = scan(right_prefix_sum, n + 1, LSr);};
   par_do(f1, f2);  
 
   pivot_inds[1] = n - pivot_inds[1];
 
-  // std::cout << 0 << " " << pivot_inds[0] << " " << pivot_inds[1] << " " << n << ", Pivot number: " << pivot << std::endl;
-  // std::cout << "Random Index: " << random_index << std::endl;
-  // std::cout << "Left Prefix, Right Prefix" << std::endl;
-  // for(size_t j = 0; j < n; j++ ) {
-  //   std::cout << left_prefix_sum[j] << " " << right_prefix_sum[j] << std::endl;
-  // }
   parallel_for(0, n, [&](size_t i) {
     if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
       A[left_prefix_sum[i]] = B[i];
@@ -182,15 +120,6 @@ void parallel_partition(
       A[i] = pivot;
     }
   });
-  // for(size_t i = pivot_inds[0]; i < pivot_inds[1]; i++) {
-  //   A[i] = pivot;
-  // }
-  // parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
-  //   // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-  //     A[i] = pivot;
-  //   // }
-  // });
-  // return pivot_inds;
 }
 
 template <class T>
@@ -202,10 +131,7 @@ void quicksort_rec(
   size_t* LSr,
   size_t* left_prefix_sum,
   size_t* right_prefix_sum) {
-  // std::sort(A, A + n);
   if(n < 850000) {
-  // if(n<100) {
-  //   // sequential_quicksort(A, n);
     std::sort(A, A + n);
     return;
   }
@@ -219,11 +145,6 @@ void quicksort_rec(
     LSr,
     left_prefix_sum,
     right_prefix_sum);
-  // std::cout << "Pivot Indeces: " << pivot_inds[0] << " " << pivot_inds[1] << std::endl;
-  // std::cout << "After Partitioning:" << std::endl;
-  // for(size_t j = 0; j < n; j++ ) {
-  //   std::cout << A[j] << std::endl;
-  // }
   auto f1 = [&]() { quicksort_rec(
     A,
     pivot_inds[0],
