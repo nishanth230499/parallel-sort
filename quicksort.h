@@ -71,7 +71,7 @@ size_t scan3(size_t *A, size_t n, size_t *chunk_sum) {
 template <typename T>
 T scan_up(T* A, T* LS, size_t n) {
   T l = 0,r;
-  if(n <= 800000) {
+  if(n <= 700000) {
     for(size_t i = 0; i < n; i++) {
       l += A[i];
     }
@@ -87,9 +87,11 @@ T scan_up(T* A, T* LS, size_t n) {
 }
 
 // 9e5: 1.66
+// 8e5: 1.58884
+// 7e5
 template <typename T>
 void scan_down(T* A, T* LS, size_t n, T offset) {
-  if(n <= 800000) {
+  if(n <= 700000) {
     T total = offset, temp;
     for (size_t i = 0; i < n; i++) {
       temp = A[i];
