@@ -134,13 +134,13 @@ void parallel_partition(
     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
     }
-    // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-    //   A[i] = pivot;
-    // }
+    if(i >= pivot_inds[0] && i < pivot_inds[1]) {
+      A[i] = pivot;
+    }
   });  
-  parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
-    A[i] = pivot;
-  });
+  // parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
+  //   A[i] = pivot;
+  // });
 }
 
 template <class T>
