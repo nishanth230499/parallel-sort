@@ -28,12 +28,12 @@ inline uint64_t hash164(uint64_t u) {
 //   return (v >> 1) | ((((v >> 0) ^ (v >> 2) ^ (v >> 3) ^ (v >> 5)) & 1) << 15);
 // }
 
-template <typename T>
-T scan(T *A, size_t n, T *chunk_sum) {
+// template <typename T>
+size_t scan(size_t *A, size_t n, size_t *chunk_sum) {
   size_t k = sqrt(n);
   size_t chunk_size = (size_t) n/k + 1;
-  T total = 0;
-  T temp, end_of_chunk;
+  size_t total = 0;
+  size_t temp, end_of_chunk;
 
   parallel_for(0, k, [&](size_t i) {
     chunk_sum[i] = 0;
