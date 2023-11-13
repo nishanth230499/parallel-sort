@@ -31,7 +31,8 @@ inline uint64_t hash164(uint64_t u) {
 // template <typename T>
 size_t scan(size_t *A, size_t n, size_t *chunk_sum) {
   size_t k = sqrt(n);
-  size_t chunk_size = (size_t) n/k + 1;
+  size_t chunk_size = n/k + 1;
+
   size_t total = 0;
   size_t temp, end_of_chunk;
 
