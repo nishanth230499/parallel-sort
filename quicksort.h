@@ -152,7 +152,7 @@ void quicksort_rec(
   size_t* LSr,
   size_t* left_prefix_sum,
   size_t* right_prefix_sum) {
-  if(n < 8500000) {
+  if(n < 8000000) {
     std::sort(A, A + n);
     return;
   }
