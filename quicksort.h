@@ -96,15 +96,16 @@ void parallel_partition(
   size_t* right_prefix_sum) {
   size_t random_index = find_median_index(A, n);
   T pivot = A[random_index];
+  size_t zero = 0;
 
   parallel_for(0, n, [&](size_t i) {
-    left_prefix_sum[i] = (A[i] < pivot) ? 1 : 0;
-    right_prefix_sum[i] = A[i] > pivot ? 1 : 0;
+    left_prefix_sum[i] = (A[i] < pivot) ? 1 : zero;
+    right_prefix_sum[i] = A[i] > pivot ? 1 : zero;
     B[i] = A[i];
   });
 
-  left_prefix_sum[n] = 0;
-  right_prefix_sum[n] = 0;
+  left_prefix_sum[n] = zero;
+  right_prefix_sum[n] = zero;
   auto f1 = [&]() { pivot_inds[0] = scan(left_prefix_sum, n + 1, LSl); };
   auto f2 = [&]() { pivot_inds[1] = scan(right_prefix_sum, n + 1, LSr);};
   par_do(f1, f2);  
