@@ -111,24 +111,36 @@ void parallel_partition(
 
   pivot_inds[1] = n - pivot_inds[1];
 
-  auto for1 = [&]() {
-    parallel_for(0, n, [&](size_t i) {
-      if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
-        A[left_prefix_sum[i]] = B[i];
-      } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
-        A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
-      }
-      // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-      //   A[i] = pivot;
-      // }
-    });
-  };
-  auto for2 = [&]() {
-    parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
-      A[i] = pivot;
-    });
-  };
-  par_do(for1, for2);  
+  // auto for1 = [&]() {
+  //   parallel_for(0, n, [&](size_t i) {
+  //     if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
+  //       A[left_prefix_sum[i]] = B[i];
+  //     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
+  //       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
+  //     }
+  //     // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
+  //     //   A[i] = pivot;
+  //     // }
+  //   });
+  // };
+  // auto for2 = [&]() {
+    
+  // };
+  // par_do(for1, for2);
+
+  parallel_for(0, n, [&](size_t i) {
+    if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
+      A[left_prefix_sum[i]] = B[i];
+    } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
+      A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
+    }
+    // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
+    //   A[i] = pivot;
+    // }
+  });  
+  parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
+    A[i] = pivot;
+  });
 }
 
 template <class T>
