@@ -5,7 +5,7 @@
 
 using namespace parlay;
 
-inline uint64_t hash164(uint64_t u) {
+inline uint64_t hash64_1(uint64_t u) {
   uint64_t v = u * 3935559000370003845ul + 2691343689449507681ul;
   v ^= v >> 21;
   v ^= v << 37;
@@ -62,7 +62,7 @@ size_t find_median_index(T* A, size_t n) {
   size_t k = 20;
   size_t random_ind[k];
   for(size_t i = 0; i < k; i++) {
-    random_ind[i] = hash164(i) % n;
+    random_ind[i] = hash64_1(i) % n;
   }
 
   std::sort(random_ind, random_ind + k, [&](size_t a, size_t b) {

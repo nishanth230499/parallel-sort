@@ -24,18 +24,14 @@ int main(int argc, char* argv[]) {
   size_t n = 1e8;
   int num_rounds = 3;
   int random_seed = 1;
-  int test = 1;
   if (argc >= 2) {
-    test = atoi(argv[1]);
+    n = atoll(argv[1]);
   }
   if (argc >= 3) {
-    n = atoll(argv[2]);
+    num_rounds = atoi(argv[2]);
   }
   if (argc >= 4) {
-    num_rounds = atoi(argv[3]);
-  }
-  if (argc >= 5) {
-    random_seed = atoi(argv[4]);
+    random_seed = atoi(argv[3]);
   }
 
   Type* A = (Type*)malloc(n * sizeof(Type));
@@ -43,34 +39,15 @@ int main(int argc, char* argv[]) {
 
   double total_time = 0;
   for (int i = 0; i <= num_rounds; i++) {
-    if(test == 2) {
-      // Generate random arrays: test2
-      parallel_for(0, n,
-                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)1e5; });
-    } else if(test == 4) {
-      // Generate random arrays: test4
-      parallel_for(0, n,
-                   [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)10; });
-    } else {
-      // Generate random arrays: test1
-      parallel_for(0, n,
-                  [&](size_t j) { A[j] = B[j] = hash64(j * random_seed) % (long unsigned int)1e9; });
-    }
+    // Generate random arrays
+    parallel_for(0, n,
+                 [&](size_t j) { A[j] = B[j] = hash64(j * random_seed); });
 
-    // for(size_t j = 0; j < n; j++ ) {
-    //   std::cout << A[j] << std::endl;
-    // }
     parlay::timer t;
     quicksort(A, n);
     t.stop();
 
     std::sort(B, B + n);
-
-    // std::cout << "Manual sort, Auto Sort" << std::endl;
-    // for(size_t j = 0; j < n; j++ ) {
-    //   std::cout << A[j] << " " << B[j] << std::endl;
-    // }
-
     parallel_for(0, n, [&](size_t j) {
       if (A[j] != B[j]) {
         std::cout << "The output is not sorted\n";
