@@ -17,18 +17,6 @@ inline uint64_t hash164(uint64_t u) {
   return v;
 }
 
-// inline uint64_t hash164(uint64_t u) {
-//   uint64_t hash = 1315423911ul;
-//   hash ^= ((hash << 5) + u + (hash >> 2));
-//   return hash;
-// }
-
-// inline uint64_t hash164(uint64_t u) {
-//   uint64_t v = u * 3935559000370003845ul + 2691343689449507681ul;
-//   return (v >> 1) | ((((v >> 0) ^ (v >> 2) ^ (v >> 3) ^ (v >> 5)) & 1) << 15);
-// }
-
-// template <typename T>
 size_t scan(size_t *A, size_t n, size_t *chunk_sum) {
   size_t k = sqrt(n);
   size_t chunk_size = n/k + 1;
@@ -90,8 +78,8 @@ void parallel_partition(
   size_t n,
   size_t *pivot_inds,
   T* B,
-  size_t* LSl,
-  size_t* LSr,
+  size_t* left_chunk_sum,
+  size_t* right_chunk_sum,
   size_t* left_prefix_sum,
   size_t* right_prefix_sum) {
   size_t random_index = find_median_index(A, n);
@@ -105,28 +93,11 @@ void parallel_partition(
 
   left_prefix_sum[n] = 0;
   right_prefix_sum[n] = 0;
-  auto f1 = [&]() { pivot_inds[0] = scan(left_prefix_sum, n + 1, LSl); };
-  auto f2 = [&]() { pivot_inds[1] = scan(right_prefix_sum, n + 1, LSr);};
+  auto f1 = [&]() { pivot_inds[0] = scan(left_prefix_sum, n + 1, left_chunk_sum); };
+  auto f2 = [&]() { pivot_inds[1] = scan(right_prefix_sum, n + 1, right_chunk_sum);};
   par_do(f1, f2);  
 
   pivot_inds[1] = n - pivot_inds[1];
-
-  // auto for1 = [&]() {
-  //   parallel_for(0, n, [&](size_t i) {
-  //     if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
-  //       A[left_prefix_sum[i]] = B[i];
-  //     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
-  //       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
-  //     }
-  //     // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-  //     //   A[i] = pivot;
-  //     // }
-  //   });
-  // };
-  // auto for2 = [&]() {
-    
-  // };
-  // par_do(for1, for2);
 
   parallel_for(0, n, [&](size_t i) {
     if(left_prefix_sum[i + 1] != left_prefix_sum[i]) {
@@ -134,9 +105,6 @@ void parallel_partition(
     } else if(right_prefix_sum[i + 1] != right_prefix_sum[i]) {
       A[pivot_inds[1] + right_prefix_sum[i]] = B[i];
     }
-    // if(i >= pivot_inds[0] && i < pivot_inds[1]) {
-    //   A[i] = pivot;
-    // }
   });  
   parallel_for(pivot_inds[0], pivot_inds[1], [&](size_t i) {
     A[i] = pivot;
@@ -148,8 +116,8 @@ void quicksort_rec(
   T *A,
   size_t n,
   T *B,
-  size_t* LSl,
-  size_t* LSr,
+  size_t* left_chunk_sum,
+  size_t* right_chunk_sum,
   size_t* left_prefix_sum,
   size_t* right_prefix_sum) {
   if(n < 8750000) {
@@ -162,24 +130,24 @@ void quicksort_rec(
     n,
     pivot_inds,
     B,
-    LSl,
-    LSr,
+    left_chunk_sum,
+    right_chunk_sum,
     left_prefix_sum,
     right_prefix_sum);
   auto f1 = [&]() { quicksort_rec(
     A,
     pivot_inds[0],
     B,
-    LSl,
-    LSr,
+    left_chunk_sum,
+    right_chunk_sum,
     left_prefix_sum,
     right_prefix_sum); };
   auto f2 = [&]() { quicksort_rec(
     A + pivot_inds[1],
     n - pivot_inds[1],
     B + pivot_inds[1],
-    LSl + pivot_inds[1],
-    LSr + pivot_inds[1],
+    left_chunk_sum + pivot_inds[1],
+    right_chunk_sum + pivot_inds[1],
     left_prefix_sum + pivot_inds[1],
     right_prefix_sum + pivot_inds[1]); };
   par_do(f1, f2);
@@ -188,8 +156,8 @@ void quicksort_rec(
 template <class T>
 void quicksort(T *A, size_t n) {
   T* B = (T*)malloc(n * sizeof(T));
-  size_t *LSl = (size_t *)malloc((n - 1) * sizeof(size_t));
-  size_t *LSr = (size_t *)malloc((n - 1) * sizeof(size_t));
+  size_t *left_chunk_sum = (size_t *)malloc((n - 1) * sizeof(size_t));
+  size_t *right_chunk_sum = (size_t *)malloc((n - 1) * sizeof(size_t));
   size_t* left_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
   size_t* right_prefix_sum = (size_t*)malloc((n+1) * sizeof(size_t));
 
@@ -197,14 +165,14 @@ void quicksort(T *A, size_t n) {
     A,
     n,
     B,
-    LSl,
-    LSr,
+    left_chunk_sum,
+    right_chunk_sum,
     left_prefix_sum,
     right_prefix_sum);
 
   free(B);
-  free(LSl);
-  free(LSr);
+  free(left_chunk_sum);
+  free(right_chunk_sum);
   free(left_prefix_sum);
   free(right_prefix_sum);
 }
